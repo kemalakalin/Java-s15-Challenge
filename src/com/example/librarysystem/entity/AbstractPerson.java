@@ -59,9 +59,10 @@ public abstract class AbstractPerson {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        Objects.requireNonNull(phoneNumber, "Phone number argument cannot be null");
-        if (phoneNumber.trim().isEmpty()) {
-            throw new IllegalArgumentException("Phone number argument cannot be empty");
+        Objects.requireNonNull(phoneNumber, "Telefon numarası boş olamaz");
+        // Regex: Sadece +, boşluk ve rakamlara izin verir
+        if (!phoneNumber.matches("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")) {
+            throw new IllegalArgumentException("Geçersiz telefon numarası formatı!");
         }
         this.phoneNumber = phoneNumber;
     }
