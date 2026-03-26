@@ -46,10 +46,6 @@ public class Library {
         authors.add(Objects.requireNonNull(author));
     }
 
-    public void removeAuthor(Author author) {
-        authors.remove(author);
-    }
-
     // Filter Methods
     public List<Book> filterByAuthor(Author author) {
         return books.stream()
@@ -64,14 +60,18 @@ public class Library {
     }
 
     public void lendBook(Reader reader, Book book) {
+        // Kitap kütüphanede mi ve okuyucu kayıtlı mı kontrolü
         if (books.contains(book) && readers.contains(reader)) {
+            // Kitabı ödünç listesine ekle
             storeData.computeIfAbsent(reader, k -> new HashSet<>()).add(book);
             reader.addBook(book);
 
+            // Fatura Kesme İşlemi
             if (librarian != null) {
                 System.out.println(librarian.createBill(reader, book));
             }
 
+            // Kitabı kütüphane stokundan düş
             books.remove(book);
         }
     }
@@ -80,7 +80,16 @@ public class Library {
         Set<Book> borrowed = storeData.get(reader);
         if (borrowed != null && borrowed.remove(book)) {
             reader.removeBook(book);
-            books.add(book);
+
+            // İSTER: Kitap iade edildiğinde ücret iadesi yapılır
+            reader.setBudget(reader.getBudget() + book.getPrice());
+
+            books.add(book); // Kitabı tekrar stoka ekle
+
+            if (borrowed.isEmpty()) {
+                storeData.remove(reader);
+            }
+            System.out.println("\n>>> Return Successful. Refund: " + book.getPrice() + " TL credited to " + reader.getName());
         }
     }
 }

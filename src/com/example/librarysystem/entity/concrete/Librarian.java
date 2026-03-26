@@ -71,13 +71,13 @@ public class Librarian {
                 reader.getName(), book.getName(), price);
     }
 
-    public String searchBook(String name) {
+    public String searchBook(String partOfName) {
         for (Book book : library.getBooks()) {
-            if (book.getName().equalsIgnoreCase(name)) {
-                return "The book " + book.getName() + " has been found.";
+            if (book.getName().toLowerCase().contains(partOfName.toLowerCase())) {
+                return "Found: " + book.getName();
             }
         }
-        return "Searched book is not in the library";
+        return "No match found.";
     }
 
     public boolean verifyMember(Reader reader) {

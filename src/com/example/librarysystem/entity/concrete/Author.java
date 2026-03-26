@@ -43,10 +43,10 @@ public class Author extends AbstractPerson {
     }
 
     public void showBooks() {
-        System.out.println(this.getName() + " has written:");
-        for (Book book : books) {
-            System.out.println("- " + book.getName());
-        }
+        System.out.println(getName() + " has written:");
+        books.stream()
+                .map(Book::getName)
+                .forEach(name -> System.out.println("- " + name));
     }
 
     @Override
